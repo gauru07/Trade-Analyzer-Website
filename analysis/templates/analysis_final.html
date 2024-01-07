@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profit Plot</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<body style="padding: 20px;
+    background-image: linear-gradient(to bottom right, #ffffff, #f2f2f2);">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Financial Analysis</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+
+
+      </ul>
+
+    </div>
+  </nav>
+
+<h3 style="padding-top: 10px; padding-bottom: 10px; text-align: center;">Finance Analysis For your porfolio</h3>
+<h5 style="text-align: center;"> Your Profile Score: </h5>
+<h1 style="text-align:center; padding-bottom: 10px; color: greenyellow;"> {{ response2 }}</h1>
+    <div style="width: 80%; margin: 0 auto;">
+
+        <div class="row" style="padding-bottom: 20px; width: 80%; display: flex; margin-left: 10%;">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ last_value.max_drawdown}}</h5>
+                  <p class="card-text">Maximum Drawdown</p>
+                  <a href="https://www.investopedia.com/terms/m/maximum-drawdown-mdd.asp#:~:text=Maximum%20drawdown%20(MDD)%20is%20a,down%20movements%20could%20be%20volatile." class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ last_value.win_loss_ratio}}</h5>
+                  <p class="card-text">winloss ratio</p>
+                  <a href="https://www.investopedia.com/terms/w/win-loss-ratio.asp#:~:text=The%20win%2Floss%20ratio%20is,they%20were%20winners%20or%20losers." class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="chart-container">
+            <canvas id="profitChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="param1Chart"></canvas>
+        </div>
+
+        <hr>
+        <div class="row" style="padding-bottom: 20px; width: 80%; display: flex; margin-left: 10%;">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ last_value.sortino_ratio }}</h5>
+                  <p class="card-text">sortino Ratio</p>
+                  <a href="https://www.investopedia.com/terms/s/sortinoratio.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ last_value.cumulative_returns }} %</h5>
+                  <p class="card-text">cumulative  Ratio</p>
+                  <a href="https://www.investopedia.com/terms/c/cumulativereturn.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div class="chart-container">
+            <canvas id="param2Chart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="param3Chart"></canvas>
+        </div>
+
+
+        <hr>
+        <div class="row" style="padding-bottom: 20px; width: 80%; display: flex; margin-left: 10%;">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ last_value.sharpe_ratio}}</h5>
+                  <p class="card-text">sharpe Ratio</p>
+                  <a href="https://www.investopedia.com/terms/s/sharperatio.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ last_value.calmar_ratio}}</h5>
+                  <p class="card-text">calmar Ratio</p>
+                  <a href="https://www.investopedia.com/terms/c/calmarratio.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div class="chart-container">
+            <canvas id="param4Chart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="param5Chart"></canvas>
+        </div>
+
+        <h4 style="text-align: center;"> Your Profile Review: </h4>
+        <h5 style="text-align:center; padding-bottom: 10px;"> {{ response1 }}</h5>
+    </div>
+
+
+
+    <style>
+        body {
+            padding: 20px;
+            background-image: linear-gradient(to bottom right, #ffffff, #f2f2f2);
+        }
+
+        .data-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .data-table th {
+            font-weight: bold;
+        }
+        h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .chart-container {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+}
+
+
+        @media (max-width: 768px) {
+            .chart-container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .chart-container {
+                width: calc(50% - 20px);
+                display: inline-block;
+            }
+        }
+    </style>
+
+    <script>
+        // Generate random data samples
+        
+    // Get the data from Django template variables
+        var datetimeList = {{ datetime | safe }};
+        var profitList = {{ max_drawdown | safe }};
+        var param1List = {{ win_loss | safe }};
+        var param2List = {{ sortino_ratio | safe }};
+        var param3List = {{ cumulative_returns | safe }};
+
+
+        var param4List = {{ sharpe_ratio | safe }};
+        var param5List = {{ calmar_ratio | safe }};
+        // console.log(datetimeList);   
+        
+
+
+        // Get the canvas elements
+        var profitCtx = document.getElementById('profitChart').getContext('2d');
+        var param1Ctx = document.getElementById('param1Chart').getContext('2d');
+        var param2Ctx = document.getElementById('param2Chart').getContext('2d');
+        var param3Ctx = document.getElementById('param3Chart').getContext('2d');
+
+        var param4Ctx = document.getElementById('param4Chart').getContext('2d');
+        var param5Ctx = document.getElementById('param5Chart').getContext('2d');
+
+        // Create the charts
+        var profitChart = new Chart(profitCtx, {
+            type: 'line',
+            data: {
+                labels: datetimeList,
+                datasets: [{
+                    label: 'Max Drawdown',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    data: profitList,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        var param1Chart = new Chart(param1Ctx, {
+            type: 'line',
+            data: {
+                labels: datetimeList,
+                datasets: [{
+                    label: 'Win Loss',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    data: param1List,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        var param2Chart = new Chart(param2Ctx, {
+            type: 'line',
+            data: {
+                labels: datetimeList,
+                datasets: [{
+                    label: 'Sortino Ratio',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    data: param2List,
+                    fill: true,
+                    borderWidth: 1.5,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+
+            }
+        });
+
+        var param3Chart = new Chart(param3Ctx, {
+            type: 'line',
+            data: {
+                labels: datetimeList,
+                datasets: [{
+                    label: 'Cumulative Return',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    data: param3List,
+                    fill: true,
+                    borderWidth: 1.5,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        var param4Chart = new Chart(param4Ctx, {
+            type: 'line',
+            data: {
+                labels: datetimeList,
+                datasets: [{
+                    label: 'sharpe ratio',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    data: param4List,
+                    fill: true,
+                    borderWidth: 1.5,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        var param5Chart = new Chart(param5Ctx, {
+            type: 'line',
+            data: {
+                labels: datetimeList,
+                datasets: [{
+                    label: 'calmar ratio',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    data: param5List,
+                    fill: true,
+                    borderWidth: 1.5,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+
+
+    </script>
+</body>
+</html>
