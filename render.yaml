@@ -3,15 +3,15 @@ services:
     name: trade-analyzer-pro
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn finance_analyzer.wsgi:application
+    buildCommand: ./build.sh
+    startCommand: gunicorn finance_analyzer.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9.18
+        value: 3.11.9
       - key: DJANGO_SETTINGS_MODULE
         value: finance_analyzer.settings
       - key: SECRET_KEY
-        generateValue: true
+        value: o_u-qx&p#tx42vl*)%&i)xai=@l6v%mb3n625%ns0ix+k2f06o
       - key: DEBUG
         value: False
       - key: ALLOWED_HOSTS
