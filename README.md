@@ -1,8 +1,31 @@
-# Financial Analyzer
+# 🚀 TradeAnalyzer Pro - Advanced Financial Analysis Platform
 
-> Note- So, I just discovered this that, I have hosted the website on render.com, so I think the server, gets slow when not used, so I would request you , wait for 30 sec-45 sec, if the website is not responding, then it will show you the results, Thanks 😅  
+> **Live Demo**: [https://trade-analyzer-pro.onrender.com](https://trade-analyzer-pro.onrender.com)
+> 
+> ⚠️ **Note**: The server may take 30-45 seconds to start if it's been idle. Please be patient! 😅
 
-The Financial Analyzer is a tool designed to analyze trade history data. It takes a document containing trade history with specific columns and provides various insights and metrics related to the trades. This documentation provides an in-depth explanation of the project, its functionalities, and the underlying code.
+## 🌟 **What's New - Advanced Features Added!**
+
+### ✨ **Professional Export & Reporting**
+- **📊 PDF Reports**: Generate comprehensive PDF reports with charts and analysis
+- **📈 Excel Export**: Multi-sheet Excel files with detailed metrics and recommendations
+- **📧 Email Reports**: Send professional reports directly via email
+- **🎨 Modern UI**: Beautiful export buttons and responsive design
+
+### 🤖 **AI-Powered Analysis**
+- **Smart Insights**: AI-generated trading performance analysis
+- **Performance Scoring**: 0-10 rating system for trader performance
+- **Personalized Recommendations**: Tailored suggestions based on your data
+
+### 📊 **Advanced Financial Metrics**
+- **Sharpe Ratio**: Risk-adjusted return measure
+- **Sortino Ratio**: Downside risk-adjusted return
+- **Maximum Drawdown**: Largest peak-to-trough decline
+- **Win/Loss Ratio**: Trading success rate
+- **Calmar Ratio**: Return vs maximum drawdown
+- **Information Ratio**: Active return vs tracking error
+
+The Financial Analyzer is a comprehensive tool designed to analyze trade history data. It takes a document containing trade history with specific columns and provides various insights and metrics related to the trades. This documentation provides an in-depth explanation of the project, its functionalities, and the underlying code.
 
 
 
@@ -35,11 +58,32 @@ The Financial Analyzer offers the following features:
 
 
 ## 3. Installation
-To use the Financial Analyzer, follow these steps:
-1. Clone the project repository: `git clone https://github.com/sudhanshu8833/Financial_Analyzer.git`
-2. Install the required dependencies. See the Dependencies section for details. `pip3 install -r requirements.txt`
-3. Open any terminal and change the working directory to the folder where the project is present.
-4. Now run the command `python3 manage.py runserver`
+
+### 🏠 **Local Development**
+To use the Financial Analyzer locally, follow these steps:
+1. Clone the project repository: `git clone https://github.com/gauru07/Trade-Analyzer-Website.git`
+2. Create a virtual environment: `python3 -m venv venv`
+3. Activate the virtual environment: `source venv/bin/activate` (Linux/Mac) or `venv\Scripts\activate` (Windows)
+4. Install the required dependencies: `pip install -r requirements.txt`
+5. Run migrations: `python manage.py migrate`
+6. Start the development server: `python manage.py runserver`
+7. Open your browser and go to `http://127.0.0.1:8000/`
+
+### ☁️ **Deploy to Render.com**
+1. Fork this repository to your GitHub account
+2. Go to [Render.com](https://render.com) and sign up/login
+3. Click "New +" and select "Web Service"
+4. Connect your GitHub repository
+5. Use these settings:
+   - **Name**: `trade-analyzer-pro` (or your preferred name)
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt && python manage.py migrate`
+   - **Start Command**: `gunicorn finance_analyzer.wsgi:application`
+6. Add environment variables:
+   - `SECRET_KEY`: Generate a new Django secret key
+   - `DEBUG`: `False`
+   - `ALLOWED_HOSTS`: `your-app-name.onrender.com`
+7. Click "Create Web Service" and wait for deployment
 
 
 
