@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from io import TextIOWrapper
 import csv
 import pandas as pd
@@ -7,6 +7,11 @@ from .final_analysis import *
 from sample_data_generator import *
 import openai
 import os
+from .pdf_generator import create_pdf_report
+from .excel_export import create_excel_report
+from .email_service import EmailReportService
+import json
+
 openai.organization = os.environ.get("OPENAI_ORG_ID")
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -157,4 +162,79 @@ def analysis_data(request):
     }
 
     return render(request, 'analysis_final.html', context)
+
+def export_pdf(request):
+    """Export analysis results as PDF"""
+    if request.method == 'POST':
+        try:
+            # Get analysis data from session or request
+            analysis_data = json.loads(request.body)
+            
+            # Generate PDF report
+            pdf_path = create_pdf_report(analysis_data)
+            
+            # Return PDF file
+            with open(pdf_path, 'rb') as pdf_file:
+                response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+                response['Content-Disposition'] = 'attachment; filename="portfolio_analysis_report.pdf"'
+                
+                # Clean up temporary file
+                os.remove(pdf_path)
+                return response
+                
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def export_excel(request):
+    """Export analysis results as Excel"""
+    if request.method == 'POST':
+        try:
+            # Get analysis data from session or request
+            analysis_data = json.loads(request.body)
+            
+            # Generate Excel report
+            excel_path = create_excel_report(analysis_data)
+            
+            # Return Excel file
+            with open(excel_path, 'rb') as excel_file:
+                response = HttpResponse(excel_file.read(), 
+                                      content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename="portfolio_analysis.xlsx"'
+                
+                # Clean up temporary file
+                os.remove(excel_path)
+                return response
+                
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def send_email_report(request):
+    """Send analysis report via email"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            email = data.get('email')
+            analysis_data = data.get('analysis_data')
+            report_type = data.get('report_type', 'pdf')
+            
+            if not email or not analysis_data:
+                return JsonResponse({'error': 'Email and analysis data required'}, status=400)
+            
+            # Send email report
+            email_service = EmailReportService()
+            success = email_service.send_analysis_report(email, analysis_data, report_type)
+            
+            if success:
+                return JsonResponse({'message': 'Report sent successfully!'})
+            else:
+                return JsonResponse({'error': 'Failed to send email'}, status=500)
+                
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 

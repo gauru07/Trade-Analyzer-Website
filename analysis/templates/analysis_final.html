@@ -1,327 +1,845 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Profit Plot</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Analysis Results - TradeAnalyzer Pro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</head>
-<body style="padding: 20px;
-    background-image: linear-gradient(to bottom right, #ffffff, #f2f2f2);">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Financial Analysis</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-
-
-      </ul>
-
-    </div>
-  </nav>
-
-<h3 style="padding-top: 10px; padding-bottom: 10px; text-align: center;">Finance Analysis For your porfolio</h3>
-<h5 style="text-align: center;"> Your Profile Score: </h5>
-<h1 style="text-align:center; padding-bottom: 10px; color: greenyellow;"> {{ response2 }}</h1>
-    <div style="width: 80%; margin: 0 auto;">
-
-        <div class="row" style="padding-bottom: 20px; width: 80%; display: flex; margin-left: 10%;">
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ last_value.max_drawdown}}</h5>
-                  <p class="card-text">Maximum Drawdown</p>
-                  <a href="https://www.investopedia.com/terms/m/maximum-drawdown-mdd.asp#:~:text=Maximum%20drawdown%20(MDD)%20is%20a,down%20movements%20could%20be%20volatile." class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ last_value.win_loss_ratio}}</h5>
-                  <p class="card-text">winloss ratio</p>
-                  <a href="https://www.investopedia.com/terms/w/win-loss-ratio.asp#:~:text=The%20win%2Floss%20ratio%20is,they%20were%20winners%20or%20losers." class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        <div class="chart-container">
-            <canvas id="profitChart"></canvas>
-        </div>
-
-        <div class="chart-container">
-            <canvas id="param1Chart"></canvas>
-        </div>
-
-        <hr>
-        <div class="row" style="padding-bottom: 20px; width: 80%; display: flex; margin-left: 10%;">
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ last_value.sortino_ratio }}</h5>
-                  <p class="card-text">sortino Ratio</p>
-                  <a href="https://www.investopedia.com/terms/s/sortinoratio.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ last_value.cumulative_returns }} %</h5>
-                  <p class="card-text">cumulative  Ratio</p>
-                  <a href="https://www.investopedia.com/terms/c/cumulativereturn.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        <div class="chart-container">
-            <canvas id="param2Chart"></canvas>
-        </div>
-
-        <div class="chart-container">
-            <canvas id="param3Chart"></canvas>
-        </div>
-
-
-        <hr>
-        <div class="row" style="padding-bottom: 20px; width: 80%; display: flex; margin-left: 10%;">
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ last_value.sharpe_ratio}}</h5>
-                  <p class="card-text">sharpe Ratio</p>
-                  <a href="https://www.investopedia.com/terms/s/sharperatio.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ last_value.calmar_ratio}}</h5>
-                  <p class="card-text">calmar Ratio</p>
-                  <a href="https://www.investopedia.com/terms/c/calmarratio.asp" class="btn btn-primary" style="background-color: grey; border: grey;">Definition</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        <div class="chart-container">
-            <canvas id="param4Chart"></canvas>
-        </div>
-
-        <div class="chart-container">
-            <canvas id="param5Chart"></canvas>
-        </div>
-
-        <h4 style="text-align: center;"> Your Profile Review: </h4>
-        <h5 style="text-align:center; padding-bottom: 10px;"> {{ response1 }}</h5>
-    </div>
-
-
-
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            padding: 20px;
-            background-image: linear-gradient(to bottom right, #ffffff, #f2f2f2);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
         }
 
-        .data-table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .data-table th,
-        .data-table td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ccc;
+        .navbar-brand {
+            font-weight: 700;
+            color: #667eea !important;
         }
 
-        .data-table th {
-            font-weight: bold;
+        .main-container {
+            padding: 2rem 0;
         }
-        h3 {
+
+        .header-section {
             text-align: center;
-            margin-bottom: 10px;
+            color: white;
+            margin-bottom: 3rem;
         }
-        .chart-container {
-            margin-bottom: 40px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-}
 
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .header-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .score-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .metric-definition {
+            background: #f8f9fa;
+            border: none;
+            color: #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .metric-definition:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: 400px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .chart-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: 400px;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .ai-insights {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-insights h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-insights p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin: 2rem 0;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .pdf-btn {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+        }
+
+        .excel-btn {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+        }
+
+        .email-btn {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
 
         @media (max-width: 768px) {
-            .chart-container {
-                width: 100%;
+            .header-section h1 {
+                font-size: 2rem;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .chart-wrapper {
+                height: 300px;
+                padding: 1rem;
+            }
+            
+            .chart-title {
+                font-size: 1rem;
             }
         }
 
-        @media (min-width: 769px) {
-            .chart-container {
-                width: calc(50% - 20px);
-                display: inline-block;
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i> TradeAnalyzer Pro
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </div>
+    </div>
+  </nav>
+
+    <div class="container main-container">
+        <div class="header-section">
+            <h1>Portfolio Analysis Results</h1>
+            <p>Comprehensive financial analysis of your trading performance</p>
+        </div>
+
+        <div class="score-container">
+            <div class="score-circle">{{ response2 }}</div>
+            <h3>Performance Score</h3>
+            <p class="text-muted">AI-powered trader rating</p>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">{{ last_value.max_drawdown }}</div>
+                <div class="metric-label">Maximum Drawdown</div>
+                <a href="https://www.investopedia.com/terms/m/maximum-drawdown-mdd.asp" class="metric-definition" target="_blank">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+                </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ last_value.win_loss_ratio }}</div>
+                <div class="metric-label">Win/Loss Ratio</div>
+                <a href="https://www.investopedia.com/terms/w/win-loss-ratio.asp" class="metric-definition" target="_blank">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+              </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ last_value.sortino_ratio }}</div>
+                <div class="metric-label">Sortino Ratio</div>
+                <a href="https://www.investopedia.com/terms/s/sortinoratio.asp" class="metric-definition" target="_blank">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ last_value.cumulative_returns }}%</div>
+                <div class="metric-label">Cumulative Returns</div>
+                <a href="https://www.investopedia.com/terms/c/cumulativereturn.asp" class="metric-definition" target="_blank">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+                </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ last_value.sharpe_ratio }}</div>
+                <div class="metric-label">Sharpe Ratio</div>
+                <a href="https://www.investopedia.com/terms/s/sharperatio.asp" class="metric-definition" target="_blank">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+              </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ last_value.calmar_ratio }}</div>
+                <div class="metric-label">Calmar Ratio</div>
+                <a href="https://www.investopedia.com/terms/c/calmarratio.asp" class="metric-definition" target="_blank">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+          </div>
+
+        <div class="charts-grid">
+            <div class="chart-wrapper">
+                <div class="chart-title">Maximum Drawdown Over Time</div>
+            <canvas id="profitChart"></canvas>
+        </div>
+
+            <div class="chart-wrapper">
+                <div class="chart-title">Win/Loss Ratio Trend</div>
+            <canvas id="param1Chart"></canvas>
+        </div>
+
+            <div class="chart-wrapper">
+                <div class="chart-title">Sortino Ratio Performance</div>
+            <canvas id="param2Chart"></canvas>
+        </div>
+
+            <div class="chart-wrapper">
+                <div class="chart-title">Cumulative Returns</div>
+            <canvas id="param3Chart"></canvas>
+        </div>
+
+            <div class="chart-wrapper">
+                <div class="chart-title">Sharpe Ratio Analysis</div>
+                <canvas id="param4Chart"></canvas>
+            </div>
+
+            <div class="chart-wrapper">
+                <div class="chart-title">Calmar Ratio Trend</div>
+                <canvas id="param5Chart"></canvas>
+            </div>
+          </div>
+
+        <div class="ai-insights">
+            <h3><i class="fas fa-robot"></i> AI-Powered Analysis</h3>
+            <p>{{ response1 }}</p>
+        </div>
+
+        <div class="text-center">
+            <div class="export-buttons" style="margin: 2rem 0;">
+                <button onclick="exportReport('pdf')" class="export-btn pdf-btn">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button onclick="exportReport('excel')" class="export-btn excel-btn">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </button>
+                <button onclick="showEmailModal()" class="export-btn email-btn">
+                    <i class="fas fa-envelope"></i> Email Report
+                </button>
+            </div>
+            
+            <a href="/" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Analyze Another Portfolio
+            </a>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEmailModal()">&times;</span>
+            <h3 style="text-align: center; margin-bottom: 1.5rem; color: #667eea;">
+                <i class="fas fa-envelope"></i> Email Report
+            </h3>
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="reportType">Report Type:</label>
+                    <select id="reportType" name="reportType">
+                        <option value="pdf">PDF Report</option>
+                        <option value="excel">Excel Report</option>
+                    </select>
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button type="submit" class="export-btn email-btn" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Send Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
-        // Generate random data samples
-        
     // Get the data from Django template variables
         var datetimeList = {{ datetime | safe }};
         var profitList = {{ max_drawdown | safe }};
         var param1List = {{ win_loss | safe }};
         var param2List = {{ sortino_ratio | safe }};
         var param3List = {{ cumulative_returns | safe }};
-
-
         var param4List = {{ sharpe_ratio | safe }};
         var param5List = {{ calmar_ratio | safe }};
-        // console.log(datetimeList);   
-        
 
-
-        // Get the canvas elements
-        var profitCtx = document.getElementById('profitChart').getContext('2d');
-        var param1Ctx = document.getElementById('param1Chart').getContext('2d');
-        var param2Ctx = document.getElementById('param2Chart').getContext('2d');
-        var param3Ctx = document.getElementById('param3Chart').getContext('2d');
-
-        var param4Ctx = document.getElementById('param4Chart').getContext('2d');
-        var param5Ctx = document.getElementById('param5Chart').getContext('2d');
+        // Chart configuration
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            family: 'Inter',
+                            size: 12
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Inter'
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Inter'
+                        }
+                    }
+                }
+            }
+        };
 
         // Create the charts
-        var profitChart = new Chart(profitCtx, {
+        new Chart(document.getElementById('profitChart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: datetimeList,
                 datasets: [{
-                    label: 'Max Drawdown',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    label: 'Maximum Drawdown',
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
                     data: profitList,
-                    fill: true
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3
                 }]
             },
-            options: {
-                responsive: true
-            }
+            options: chartOptions
         });
 
-        var param1Chart = new Chart(param1Ctx, {
+        new Chart(document.getElementById('param1Chart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: datetimeList,
                 datasets: [{
-                    label: 'Win Loss',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    label: 'Win/Loss Ratio',
+                    borderColor: '#48bb78',
+                    backgroundColor: 'rgba(72, 187, 120, 0.1)',
                     data: param1List,
-                    fill: true
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3
                 }]
             },
-            options: {
-                responsive: true
-            }
+            options: chartOptions
         });
 
-        var param2Chart = new Chart(param2Ctx, {
+        new Chart(document.getElementById('param2Chart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: datetimeList,
                 datasets: [{
                     label: 'Sortino Ratio',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: '#ed8936',
+                    backgroundColor: 'rgba(237, 137, 54, 0.1)',
                     data: param2List,
                     fill: true,
-                    borderWidth: 1.5,
-                    pointRadius: 0
+                    tension: 0.4,
+                    borderWidth: 3
                 }]
             },
-            options: {
-                responsive: true,
-
-            }
+            options: chartOptions
         });
 
-        var param3Chart = new Chart(param3Ctx, {
+        new Chart(document.getElementById('param3Chart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: datetimeList,
                 datasets: [{
-                    label: 'Cumulative Return',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    label: 'Cumulative Returns (%)',
+                    borderColor: '#9f7aea',
+                    backgroundColor: 'rgba(159, 122, 234, 0.1)',
                     data: param3List,
                     fill: true,
-                    borderWidth: 1.5,
-                    pointRadius: 0
+                    tension: 0.4,
+                    borderWidth: 3
                 }]
             },
-            options: {
-                responsive: true
-            }
+            options: chartOptions
         });
 
-        var param4Chart = new Chart(param4Ctx, {
+        new Chart(document.getElementById('param4Chart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: datetimeList,
                 datasets: [{
-                    label: 'sharpe ratio',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    label: 'Sharpe Ratio',
+                    borderColor: '#f56565',
+                    backgroundColor: 'rgba(245, 101, 101, 0.1)',
                     data: param4List,
                     fill: true,
-                    borderWidth: 1.5,
-                    pointRadius: 0
+                    tension: 0.4,
+                    borderWidth: 3
                 }]
             },
-            options: {
-                responsive: true
-            }
+            options: chartOptions
         });
 
-        var param5Chart = new Chart(param5Ctx, {
+        new Chart(document.getElementById('param5Chart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: datetimeList,
                 datasets: [{
-                    label: 'calmar ratio',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    label: 'Calmar Ratio',
+                    borderColor: '#4299e1',
+                    backgroundColor: 'rgba(66, 153, 225, 0.1)',
                     data: param5List,
                     fill: true,
-                    borderWidth: 1.5,
-                    pointRadius: 0
+                    tension: 0.4,
+                    borderWidth: 3
                 }]
             },
-            options: {
-                responsive: true
-            }
+            options: chartOptions
         });
 
+        // Export functionality
+        function exportReport(type) {
+            const analysisData = {
+                datetime: datetimeList,
+                max_drawdown: profitList,
+                win_loss: param1List,
+                sortino_ratio: param2List,
+                cumulative_returns: param3List,
+                sharpe_ratio: param4List,
+                calmar_ratio: param5List,
+                response1: "{{ response1|escapejs }}",
+                response2: "{{ response2|escapejs }}",
+                last_value: {
+                    max_drawdown: {{ last_value.max_drawdown|default:"null" }},
+                    win_loss_ratio: {{ last_value.win_loss_ratio|default:"null" }},
+                    sharpe_ratio: {{ last_value.sharpe_ratio|default:"null" }},
+                    sortino_ratio: {{ last_value.sortino_ratio|default:"null" }},
+                    cumulative_returns: {{ last_value.cumulative_returns|default:"null" }},
+                    calmar_ratio: {{ last_value.calmar_ratio|default:"null" }},
+                    standard_deviation: {{ last_value.standard_deviation|default:"null" }},
+                    excess_returns: {{ last_value.excess_returns|default:"null" }},
+                    information_ratio: {{ last_value.information_ratio|default:"null" }}
+                }
+            };
 
+            const url = type === 'pdf' ? '/export/pdf' : '/export/excel';
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(analysisData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                }
+                throw new Error('Export failed');
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = type === 'pdf' ? 'portfolio_analysis_report.pdf' : 'portfolio_analysis.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                // Show success message
+                showNotification(`Report exported successfully as ${type.toUpperCase()}!`, 'success');
+            })
+            .catch(error => {
+                console.error('Export error:', error);
+                showNotification('Failed to export report. Please try again.', 'error');
+            });
+        }
 
+        // Email functionality
+        function showEmailModal() {
+            document.getElementById('emailModal').style.display = 'block';
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+
+        // Handle email form submission
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const reportType = document.getElementById('reportType').value;
+            
+            const analysisData = {
+                datetime: datetimeList,
+                max_drawdown: profitList,
+                win_loss: param1List,
+                sortino_ratio: param2List,
+                cumulative_returns: param3List,
+                sharpe_ratio: param4List,
+                calmar_ratio: param5List,
+                response1: "{{ response1|escapejs }}",
+                response2: "{{ response2|escapejs }}",
+                last_value: {
+                    max_drawdown: {{ last_value.max_drawdown|default:"null" }},
+                    win_loss_ratio: {{ last_value.win_loss_ratio|default:"null" }},
+                    sharpe_ratio: {{ last_value.sharpe_ratio|default:"null" }},
+                    sortino_ratio: {{ last_value.sortino_ratio|default:"null" }},
+                    cumulative_returns: {{ last_value.cumulative_returns|default:"null" }},
+                    calmar_ratio: {{ last_value.calmar_ratio|default:"null" }},
+                    standard_deviation: {{ last_value.standard_deviation|default:"null" }},
+                    excess_returns: {{ last_value.excess_returns|default:"null" }},
+                    information_ratio: {{ last_value.information_ratio|default:"null" }}
+                }
+            };
+
+            const requestData = {
+                email: email,
+                analysis_data: analysisData,
+                report_type: reportType
+            };
+
+            fetch('/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    showNotification('Report sent successfully!', 'success');
+                    closeEmailModal();
+                } else {
+                    showNotification(data.error || 'Failed to send email', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Email error:', error);
+                showNotification('Failed to send email. Please try again.', 'error');
+            });
+        });
+
+        // Utility functions
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                ${type === 'success' ? 'background: #28a745;' : 'background: #dc3545;'}
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('emailModal');
+            if (event.target === modal) {
+                closeEmailModal();
+            }
+        }
     </script>
+
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
 </body>
 </html>

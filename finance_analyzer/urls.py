@@ -25,7 +25,10 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", csv_upload, name="upload_csv"),
-    path("analysis", analysis_data, name="data_analysis")
+    path("analysis", analysis_data, name="data_analysis"),
+    path("export/pdf", export_pdf, name="export_pdf"),
+    path("export/excel", export_excel, name="export_excel"),
+    path("send-email", send_email_report, name="send_email_report")
 ]
 
 
