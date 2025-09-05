@@ -3,7 +3,11 @@ services:
     name: trade-analyzer-pro
     env: python
     plan: free
-    buildCommand: ./build.sh
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt --no-cache-dir
+      python manage.py collectstatic --noinput
+      python manage.py migrate
     startCommand: gunicorn finance_analyzer.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
